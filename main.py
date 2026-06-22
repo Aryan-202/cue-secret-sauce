@@ -1,43 +1,31 @@
-import speech_recognition as sr
-from pydub import AudioSegment
-import io
+import whisper
+import os
 
 def main():
-    recognizer = sr.Recognizer()
-    audio_file_path = r"temp\sample_song.mp3"
+    # Define your file path
+    audio_file = r"temp\sample_song.mp3"
+    
+    if not os.path.exists(audio_file):
+        print(f"Error: File not found at {audio_file}")
+        return
 
+    # Load the model
+    # 'base' is good; if you have a GPU and want better accuracy, use 'small' or 'medium'
+    print("Loading Whisper model...")
+    model = whisper.load_model("base")
+
+    # Transcribe the audio
+    # Whisper handles the conversion internally using ffmpeg
+    print(f"Transcribing '{audio_file}'... (this might take a while)")
+    
     try:
-        # 1. Load the audio file
-        print("Loading and converting audio...")
-        sound = AudioSegment.from_mp3(audio_file_path)
+        result = model.transcribe(audio_file)
         
-        # 2. Force conversion to 16kHz, mono (required for best API compatibility)
-        sound = sound.set_frame_rate(16000).set_channels(1)
+        print("\n--- Transcription Result ---")
+        print(result["text"])
         
-        # 3. Export to an in-memory buffer
-        wav_io = io.BytesIO()
-        sound.export(wav_io, format="wav")
-        wav_io.seek(0)
-
-        # 4. Process the audio
-        with sr.AudioFile(wav_io) as source:
-            print("Processing audio file (this may take a moment)...")
-            audio_data = recognizer.record(source)
-
-        # 5. Recognize
-        print("Transcribing...")
-        audio_text = recognizer.recognize_google(audio_data)
-        print("\n--- Transcription ---")
-        print(audio_text)
-
-    except FileNotFoundError:
-        print(f"Error: The file at {audio_file_path} was not found.")
-    except sr.UnknownValueError:
-        print("Google Speech Recognition could not understand the audio.")
-    except sr.RequestError as e:
-        print(f"Could not request results; {e}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        print(f"An error occurred during transcription: {e}")
 
 if __name__ == "__main__":
     main()
