@@ -87,6 +87,8 @@ ipython_config.py
 # ide
 .vscode
 
+# miscellaneous
+temp
 
 
 
