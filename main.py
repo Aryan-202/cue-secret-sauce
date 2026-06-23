@@ -9,13 +9,9 @@ def main():
         print(f"Error: File not found at {audio_file}")
         return
 
-    # Load the model
-    # 'base' is good; if you have a GPU and want better accuracy, use 'small' or 'medium'
     print("Loading Whisper model...")
     model = whisper.load_model("base")
 
-    # Transcribe the audio
-    # Whisper handles the conversion internally using ffmpeg
     print(f"Transcribing '{audio_file}'... (this might take a while)")
     
     try:
