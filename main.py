@@ -12,7 +12,7 @@ def main():
     print("Loading Whisper model...")
     model = whisper.load_model("base")
 
-    print(f"Transcribing '{audio_file}'... (this might take a while)")
+    print(f"Transcribing '{audio_file}'...")
     
     try:
         result = model.transcribe(audio_file)
