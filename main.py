@@ -2,7 +2,6 @@ import whisper
 import os
 
 def main():
-    # Define your file path
     audio_file = r"temp\sample_song.mp3"
     
     if not os.path.exists(audio_file):
